@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Simple popup</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="src/jquery.popup.css">
+
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="src/jquery.popup.js"></script>
+    <script>
+        $(function () {
+            $.popup.setDefaults('maxWidth', '640px');
+            $.popup.setDefaults('onOpened', function (s) {
+                $('body').addClass('popup-wrapper');
+
+                console.log(s.attr('id') + ' opened');
+            });
+            $.popup.setDefaults('onClosed', function (s) {
+                if (!$('body').find('.popup[data-ui-active="true"]').length)
+                    $('body').removeClass('popup-wrapper');
+
+                console.log(s.attr('id') + ' closed');
+            });
+
+            $('.popup-item').popup({ 
+                onOpened: function(s) {
+                    //base handler
+                    var base = $.popup.getDefaults('onOpened');
+                    if (base) base(s);
+                    //override handler
+                    console.log('custom open event')
+                }
+            });
+
+            $('.popup-opener').bind('click', function() {
+                $($(this).attr('href')).popup('open');
+
+                return false;
+            })
+        });
+    </script>
+</head>
+
+<body>
+    <a href="#my-popup" class="popup-opener">open popup</a>
+
+
+    <div id="my-popup" class="popup-item" data-ui-active="true">
+        <p>content of popup</p>
+    </div>
+</body>
+
+</html>
